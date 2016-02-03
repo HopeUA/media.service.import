@@ -1,0 +1,12 @@
+{
+  "mysql": {
+    "host": "",
+    "user": "",
+    "password": "",
+    "database": ""
+  },
+  "mediaService": {
+    "url": "",
+    "token": ""
+  }
+}
