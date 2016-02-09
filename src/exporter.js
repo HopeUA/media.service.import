@@ -33,22 +33,32 @@ export default class Exporter {
 
             if (!await MediaService.isExists('categories', category.uid)) {
                 Logger.info(`Category "${category.uid}" not found. Create...`);
-                await MediaService.update('categories', Object.assign({}, category, {
-
-                }));
+                let result = await MediaService.update('categories', Object.assign({}, category));
+                if (result.error) {
+                    Logger.error(`Can't create category: ${result.error.message}`);
+                    continue;
+                }
             }
             if (!await MediaService.isExists('shows', show.uid)) {
                 Logger.info(`Show "${show.uid}" not found. Create...`);
-                await MediaService.update('shows', Object.assign({}, show, {
+                let result = await MediaService.update('shows', Object.assign({}, show, {
                     categoryId: category.uid
                 }));
+                if (result.error) {
+                    Logger.error(`Can't create category: ${result.error.message}`);
+                    continue;
+                }
             }
 
             Logger.info(`Update ${episode.uid}`);
-            await MediaService.update('episodes', Object.assign({}, episode, {
+            let result = await MediaService.update('episodes', Object.assign({}, episode, {
                 publish: episode.publish.format(),
                 showId: show.uid
             }));
+            if (result.error) {
+                Logger.error(`Can't create category: ${result.error.message}`);
+                continue;
+            }
 
             Logger.info(`Episode "${episode.uid}" updated`);
         }
