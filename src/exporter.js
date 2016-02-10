@@ -7,7 +7,7 @@ import MediaApi from 'api/Media';
 import MediaService from 'api/MediaService';
 
 export default class Exporter {
-    static async run(config) {
+    static async run() {
         Logger.info('Export START');
 
         // 1. Get categories
@@ -31,17 +31,19 @@ export default class Exporter {
                 return item.id === show.categoryId;
             });
 
-            if (!await MediaService.isExists('categories', category.uid)) {
+            const categoryExists = await MediaService.isExists('categories', category.uid);
+            if (!categoryExists) {
                 Logger.info(`Category "${category.uid}" not found. Create...`);
-                let result = await MediaService.update('categories', Object.assign({}, category));
+                const result = await MediaService.update('categories', Object.assign({}, category));
                 if (result.error) {
                     Logger.error(`Can't create category: ${result.error.message}`);
                     continue;
                 }
             }
-            if (!await MediaService.isExists('shows', show.uid)) {
+            const showExists = await MediaService.isExists('shows', show.uid);
+            if (!showExists) {
                 Logger.info(`Show "${show.uid}" not found. Create...`);
-                let result = await MediaService.update('shows', Object.assign({}, show, {
+                const result = await MediaService.update('shows', Object.assign({}, show, {
                     categoryId: category.uid
                 }));
                 if (result.error) {
@@ -51,7 +53,7 @@ export default class Exporter {
             }
 
             Logger.info(`Update ${episode.uid}`);
-            let result = await MediaService.update('episodes', Object.assign({}, episode, {
+            const result = await MediaService.update('episodes', Object.assign({}, episode, {
                 publish: episode.publish.format(),
                 showId: show.uid
             }));

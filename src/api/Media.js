@@ -34,7 +34,7 @@ export default class Media {
                     days: show.days,
                     time: show.time
                 },
-                anons: !!show.anons
+                anons: Boolean(show.anons)
             };
         });
     }
@@ -51,11 +51,13 @@ export default class Media {
                 case 2: language = 'ru'; break;
                 case 3: language = 'uk'; break;
                 case 11: language = 'ru,uk'; break;
+                default: language = null;
             }
             switch (episode.lang_translate) {
                 case 9: language = 'ru'; break;
                 case 10: language = 'uk'; break;
                 case 12: language = 'ru,uk'; break;
+                default: language = null;
             }
 
             return {
@@ -66,10 +68,14 @@ export default class Media {
                 author: episode.author,
                 description: episode.desc,
                 publish: Moment(episode.publish),
-                tags: episode.tags.length > 0 ? episode.tags.split(',').map(tag => tag.trim()) : [],
-                hd: !!episode.hd,
+                tags: episode.tags.length > 0 ? episode.tags.split(',').map((tag) => tag.trim()) : [],
+                hd: Boolean(episode.hd),
                 language,
-                youtube: episode.youtube
+                source: {
+                    youtube: {
+                        id: episode.youtube
+                    }
+                }
             };
         });
     }
