@@ -47,18 +47,18 @@ export default class Media {
         const flatList = await db.query(query);
         return flatList.map((episode) => {
             let language;
+            /* eslint-disable  default-case */
             switch (episode.lang_original) {
                 case 2: language = 'ru'; break;
                 case 3: language = 'uk'; break;
                 case 11: language = 'ru,uk'; break;
-                default: language = null;
             }
             switch (episode.lang_translate) {
                 case 9: language = 'ru'; break;
                 case 10: language = 'uk'; break;
                 case 12: language = 'ru,uk'; break;
-                default: language = null;
             }
+            /* eslint-enable  default-case */
 
             return {
                 id: episode.id,
