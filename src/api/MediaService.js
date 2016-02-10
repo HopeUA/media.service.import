@@ -12,11 +12,12 @@ export default class MediaService {
 
     static async update(resource, data) {
         const url = `${Config.get('mediaService.url')}/${resource}`;
+        const token = new Buffer(Config.get('mediaService.token')).toString('base64');
         const response = await Fetch(url, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${Config.get('mediaService.token')}`
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify(data)
         });
