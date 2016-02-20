@@ -36,7 +36,7 @@ export default class Exporter {
                 Logger.info(`Category "${category.uid}" not found. Create...`);
                 const result = await MediaService.update('categories', Object.assign({}, category));
                 if (result.error) {
-                    Logger.error(`Can't create category: ${result.error.message}`);
+                    Logger.error(`Can't create Category: ${result.error.message}`);
                     continue;
                 }
             }
@@ -47,7 +47,7 @@ export default class Exporter {
                     categoryId: category.uid
                 }));
                 if (result.error) {
-                    Logger.error(`Can't create category: ${result.error.message}`);
+                    Logger.error(`Can't create Show: ${result.error.message}`);
                     continue;
                 }
             }
@@ -58,7 +58,7 @@ export default class Exporter {
                 showId: show.uid
             }));
             if (result.error) {
-                Logger.error(`Can't create category: ${result.error.message}`);
+                Logger.error(`Can't create Episode: ${result.error.message}`);
                 continue;
             }
 

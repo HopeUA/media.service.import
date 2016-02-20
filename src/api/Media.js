@@ -40,10 +40,14 @@ export default class Media {
     }
 
     static async getEpisodes() {
-        const query = 'SELECT a.*, y.code as youtube, y.publish_time as publish'
+        // const query = 'SELECT a.*, y.code as youtube, y.publish_time as publish'
+        //             + ' FROM apps a'
+        //             + ' LEFT JOIN youtube y ON y.app_id = a.id'
+        //             + ' WHERE y.code IS NOT NULL';
+        const query = 'SELECT a.*, y.code as youtube, y.channel as youtube_channel, y.publish_time as publish'
                     + ' FROM apps a'
                     + ' LEFT JOIN youtube y ON y.app_id = a.id'
-                    + ' WHERE y.code IS NOT NULL';
+                    + ' WHERE a.status = 100';
         const flatList = await db.query(query);
         return flatList.map((episode) => {
             let language;
@@ -60,23 +64,27 @@ export default class Media {
             }
             /* eslint-enable  default-case */
 
-            return {
+            const result = {
                 id: episode.id,
                 uid: episode.code,
                 title: episode.title,
                 showId: episode.program_id,
                 author: episode.author,
                 description: episode.desc,
-                publish: Moment(episode.publish),
                 tags: episode.tags.length > 0 ? episode.tags.split(',').map((tag) => tag.trim()) : [],
                 hd: Boolean(episode.hd),
-                language,
-                source: {
-                    youtube: {
-                        id: episode.youtube
-                    }
-                }
+                language
             };
+
+            if (episode.youtube && episode.publish) {
+                result.publish = Moment(episode.publish);
+                result.source = {};
+                result.source.youtube = {};
+                result.source.youtube.id = episode.youtube;
+                result.source.youtube.channel = episode.youtube;
+            }
+
+            return result;
         });
     }
 }
