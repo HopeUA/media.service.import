@@ -54,7 +54,7 @@ export default class Exporter {
 
             Logger.info(`Update ${episode.uid}`);
             const result = await MediaService.update('episodes', Object.assign({}, episode, {
-                publish: episode.publish.format(),
+                publish: episode.publish ? episode.publish.format() : undefined,
                 showId: show.uid
             }));
             if (result.error) {
