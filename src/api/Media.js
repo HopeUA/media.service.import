@@ -47,7 +47,8 @@ export default class Media {
         const query = 'SELECT a.*, y.code as youtube, y.channel as youtube_channel, y.publish_time as publish'
                     + ' FROM apps a'
                     + ' LEFT JOIN youtube y ON y.app_id = a.id'
-                    + ' WHERE a.status = 100';
+                    + ' WHERE a.status = 100'
+                    + '   OR (a.status = 40 && a.program_id = 39)'; // Morning Hope
         const flatList = await db.query(query);
         return flatList.map((episode) => {
             let language;
