@@ -48,7 +48,7 @@ export default class Media {
                     + ' FROM apps a'
                     + ' LEFT JOIN youtube y ON y.app_id = a.id'
                     + ' WHERE a.status = 100'
-                    + '   OR (a.status = 40 && a.program_id = 39)'; // Morning Hope
+                    + '   OR (a.status > 10 && a.program_id = 39)'; // Morning Hope
         const flatList = await db.query(query);
         return flatList.map((episode) => {
             let language;
