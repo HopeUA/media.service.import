@@ -39,16 +39,41 @@ export default class Media {
         });
     }
 
-    static async getEpisodes() {
+    static async getEpisodes(options) {
+        let query;
+
+        switch (options.type) {
+            case 'shared':
+                query = 'SELECT a.*, y.code as youtube, y.channel as youtube_channel, y.publish_time as publish'
+                      + ' FROM apps a'
+                      + ' LEFT JOIN youtube y ON y.app_id = a.id'
+                      + ' LEFT JOIN programs p ON p.id = a.program_id'
+                      + ' LEFT JOIN channels ch ON ch.id = p.channel_id'
+                      + ' WHERE a.status = 100';
+                break;
+            case 'channel':
+                query = 'SELECT a.*, y.code as youtube, y.channel as youtube_channel, y.publish_time as publish'
+                      + ' FROM apps a'
+                      + ' LEFT JOIN youtube y ON y.app_id = a.id'
+                      + ' LEFT JOIN programs p ON p.id = a.program_id'
+                      + ' LEFT JOIN channels ch ON ch.id = p.channel_id'
+                      + ' WHERE a.status = 100'
+                      + '   AND ch.alias IN (' + options.channels.map((alias) => '"' + alias + '"').join(',') + ')'
+                      + '   AND y.code <> ""';
+                break;
+            default:
+                return null;
+        }
+
         // const query = 'SELECT a.*, y.code as youtube, y.publish_time as publish'
         //             + ' FROM apps a'
         //             + ' LEFT JOIN youtube y ON y.app_id = a.id'
         //             + ' WHERE y.code IS NOT NULL';
-        const query = 'SELECT a.*, y.code as youtube, y.channel as youtube_channel, y.publish_time as publish'
-                    + ' FROM apps a'
-                    + ' LEFT JOIN youtube y ON y.app_id = a.id'
-                    + ' WHERE a.status = 100'
-                    + '   OR (a.status > 10 && a.program_id = 39)'; // Morning Hope
+        // const query = 'SELECT a.*, y.code as youtube, y.channel as youtube_channel, y.publish_time as publish'
+        //             + ' FROM apps a'
+        //             + ' LEFT JOIN youtube y ON y.app_id = a.id'
+        //             + ' WHERE a.status = 100'
+        //             + '   OR (a.status > 10 && a.program_id = 39)'; // Morning Hope
         const flatList = await db.query(query);
         return flatList.map((episode) => {
             let language;
@@ -82,7 +107,7 @@ export default class Media {
                 result.source = {};
                 result.source.youtube = {};
                 result.source.youtube.id = episode.youtube;
-                result.source.youtube.channel = episode.youtube;
+                result.source.youtube.channel = episode.youtube_channel;
             }
 
             return result;

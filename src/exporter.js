@@ -5,10 +5,18 @@
 import Logger from 'utils/logger';
 import MediaApi from 'api/Media';
 import MediaService from 'api/MediaService';
+import Config from 'config';
 
 export default class Exporter {
-    static async run() {
+    static async run(options) {
         Logger.info('Export START');
+
+        // 0. Clear db
+        if (options.fresh) {
+            await MediaService.remove('episodes');
+            await MediaService.remove('shows');
+            await MediaService.remove('categories');
+        }
 
         // 1. Get categories
         const categories = await MediaApi.getCategories();
@@ -17,7 +25,7 @@ export default class Exporter {
         const shows = await MediaApi.getShows();
 
         // 3. Get episodes
-        const episodes = await MediaApi.getEpisodes();
+        const episodes = await MediaApi.getEpisodes(Config.get('query'));
 
         // 4. Export to Media.Service
         for (const episode of episodes) {

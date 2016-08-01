@@ -24,4 +24,17 @@ export default class MediaService {
 
         return await response.json();
     }
+
+    static async remove(resource) {
+        const url = `${Config.get('mediaService.url')}/${resource}`;
+        const token = new Buffer(Config.get('mediaService.token')).toString('base64');
+        const response = await Fetch(url, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return response.status === 204;
+    }
 }

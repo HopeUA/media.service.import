@@ -4,8 +4,14 @@
  */
 import Logger from 'utils/logger';
 import Exporter from 'exporter';
+import Nopt from 'nopt';
 
-Exporter.run().then(() => {
+const optionsConfig = {
+    fresh: Boolean
+};
+const options = Nopt(optionsConfig);
+
+Exporter.run(options).then(() => {
     Logger.info('Export FINISH');
     process.exit(0);
 }).catch((error) => {
