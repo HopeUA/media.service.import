@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "NODE_PATH=./src node -r babel-register bin/app.js",
+    "start-fresh": "NODE_PATH=./src node -r babel-register bin/app.js --fresh",
     "dev": "NODE_PATH=./src DEBUG=app node -r babel-register bin/app.js"
   },
   "dependencies": {
