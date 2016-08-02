@@ -13,6 +13,7 @@ export default class Exporter {
 
         // 0. Clear db
         if (options.fresh) {
+            Logger.info('DB Clean');
             await MediaService.remove('episodes');
             await MediaService.remove('shows');
             await MediaService.remove('categories');
