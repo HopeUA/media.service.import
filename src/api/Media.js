@@ -52,13 +52,17 @@ export default class Media {
                       + ' WHERE a.status = 100';
                 break;
             case 'channel':
+                const additionalQuery = options.additional.map((code) => ` OR a.code = "${code}"`);
+
                 query = 'SELECT a.*, y.code as youtube, y.channel as youtube_channel, y.publish_time as publish'
                       + ' FROM apps a'
                       + ' LEFT JOIN youtube y ON y.app_id = a.id'
                       + ' LEFT JOIN programs p ON p.id = a.program_id'
                       + ' LEFT JOIN channels ch ON ch.id = p.channel_id'
                       + ' WHERE a.status = 100'
-                      + '   AND ch.alias IN (' + options.channels.map((alias) => '"' + alias + '"').join(',') + ')'
+                      + '   AND (ch.alias IN (' + options.channels.map((alias) => '"' + alias + '"').join(',') + ')'
+                      + additionalQuery
+                      + ')'
                       + '   AND y.code <> ""';
                 break;
             default:
