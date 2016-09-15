@@ -1,7 +1,7 @@
 {
   "name": "media-service-import",
   "description": "Media library import for hope.ua",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "license": "MIT",
   "author": {
     "name": "Sergey Saodovi",
