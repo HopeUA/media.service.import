@@ -52,7 +52,7 @@ export default class Media {
                       + ' WHERE a.status = 100';
                 break;
             case 'channel':
-                const additionalQuery = options.additional ? options.additional.map((code) => ` OR a.code = "${code}"`) : '';
+                const additionalQuery = options.additional ? options.additional.map((code) => ` OR p.code = "${code}"`) : '';
 
                 query = 'SELECT a.*, y.code as youtube, y.channel as youtube_channel, y.publish_time as publish'
                       + ' FROM apps a'
